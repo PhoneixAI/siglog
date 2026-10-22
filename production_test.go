@@ -35,7 +35,7 @@ func newNoopLogger(t *testing.T) *Logger {
 func TestNewBufferProfilesAndManualConfiguration(t *testing.T) {
 	t.Run("balanced default profile", func(t *testing.T) {
 		logger := newNoopLogger(t)
-		if logger.pipeline.buffer.shardCount != 4 || logger.pipeline.buffer.shardCap != 64*KB {
+		if logger.pipeline.buffer.shardCount != 8 || logger.pipeline.buffer.shardCap != 64*KB {
 			t.Fatalf("unexpected defaults: shards=%d capacity=%d", logger.pipeline.buffer.shardCount, logger.pipeline.buffer.shardCap)
 		}
 		if logger.pipeline.timeout != 250*time.Millisecond || logger.pipeline.flushSize.Load() != int64(64*KB) {
@@ -53,7 +53,7 @@ func TestNewBufferProfilesAndManualConfiguration(t *testing.T) {
 				t.Errorf("Close: %v", err)
 			}
 		})
-		if logger.pipeline.buffer.shardCount != 2 || logger.pipeline.buffer.shardCap != 16*KB {
+		if logger.pipeline.buffer.shardCount != 4 || logger.pipeline.buffer.shardCap != 16*KB {
 			t.Fatalf("unexpected low-memory profile: shards=%d capacity=%d", logger.pipeline.buffer.shardCount, logger.pipeline.buffer.shardCap)
 		}
 		if logger.pipeline.timeout != 100*time.Millisecond || logger.pipeline.flushSize.Load() != int64(8*KB) {
@@ -71,7 +71,7 @@ func TestNewBufferProfilesAndManualConfiguration(t *testing.T) {
 				t.Errorf("Close: %v", err)
 			}
 		})
-		if logger.pipeline.buffer.shardCount != 8 || logger.pipeline.buffer.shardCap != 256*KB {
+		if logger.pipeline.buffer.shardCount != 32 || logger.pipeline.buffer.shardCap != 256*KB {
 			t.Fatalf("unexpected high-throughput profile: shards=%d capacity=%d", logger.pipeline.buffer.shardCount, logger.pipeline.buffer.shardCap)
 		}
 		if got := logger.pipeline.flushSize.Load(); got != int64(256*KB) {
